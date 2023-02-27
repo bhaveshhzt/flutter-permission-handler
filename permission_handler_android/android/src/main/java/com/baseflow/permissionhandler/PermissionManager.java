@@ -75,7 +75,7 @@ final class PermissionManager implements PluginRegistry.ActivityResultListener, 
             }
         } else if (requestCode == PermissionConstants.PERMISSION_CODE_REQUEST_INSTALL_PACKAGES) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                status = activity.getPackageManager().canRequestPackageInstalls()
+                status = (activity != null && activity.getPackageManager().canRequestPackageInstalls())
                         ? PermissionConstants.PERMISSION_STATUS_GRANTED
                         : PermissionConstants.PERMISSION_STATUS_DENIED;
                 permission = PermissionConstants.PERMISSION_GROUP_REQUEST_INSTALL_PACKAGES;
@@ -98,7 +98,9 @@ final class PermissionManager implements PluginRegistry.ActivityResultListener, 
 
         HashMap<Integer, Integer> results = new HashMap<>();
         results.put(permission, status);
-        successCallback.onSuccess(results);
+        if (successCallback != null) {
+            successCallback.onSuccess(results);
+        }
         return true;
     }
 
